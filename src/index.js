@@ -12,6 +12,15 @@ import App from './App';
 const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+queryClient.setDefaultOptions({
+  queries: {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    enabled: false,
+    retry: false
+  }
+})
+
 root.render(
   <React.StrictMode>
     <CssBaseline />

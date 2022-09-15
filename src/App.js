@@ -1,20 +1,37 @@
 import { useState } from "react";
-import { Typography, CardActions, CardContent, Button, Stepper, Step, StepLabel } from "@mui/material";
+import { Typography } from "@mui/material";
 import Header from "./components/Header";
-import StageCard from "./components/StageCard";
+import { useSandboxData } from "./hooks/useSandbox";
+import useWallets from "./hooks/useWallets";
+
+import { Algodv2, ABIContract } from "algosdk";
+import dao_abi from './contracts/dao_abi.json'
 
 import DeployApp from "./stages/0_deploy_app";
+import DAOToken from "./stages/1_dao_token";
+import InitDAO from "./stages/2_init_dao";
+import FakeASA from "./stages/3_fake_asa";
+import ProposeFunctionality from "./stages/4_propose_func";
+import Voting from "./stages/5_voting";
+import Proposal from "./stages/6_proposal";
+import Invoke from "./stages/7_invoke";
 
-// Stages
-// 0: Nothing
-// 1: App is Deployed
-
+const contract = new ABIContract(dao_abi)
 
 export default function App() {
-	const [stage, setStage] = useState(0);
-	const [data, setData] = useState({});
+	const [app, setApp] = useState({
+		stage: 0,
+		data: {}
+	})
 
 	// const { data: sandbox_conn } = useSandboxActive()
+	const [sandbox] = useSandboxData()
+
+	const {data: wallets} = useWallets()
+
+	const algod = new Algodv2(sandbox.algod_token, "http://localhost", sandbox.algod_port)
+
+	console.log(app)
 
 	return (
 		<main id="App">
@@ -22,74 +39,14 @@ export default function App() {
 			<Typography variant="h3" textAlign="center" mb={2}>Extendable DAO Demo</Typography>
 
 			<section style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
-				<DeployApp stage={stage} setStage={setStage} setData={setData} />
-
-				<StageCard currStage={stage} triggerStage={1} title="Create DAO Token">
-					<CardContent>
-						<Stepper activeStep={4} orientation="vertical">
-							<Step><StepLabel>Creating DAO Token</StepLabel></Step>
-							<Step><StepLabel>Opting in Voter + Deployer Acc</StepLabel></Step>
-							<Step><StepLabel>Sending Assets</StepLabel></Step>
-							<Step><StepLabel>Create Dummy ASAs</StepLabel></Step>
-						</Stepper>
-					</CardContent>
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(2)} disabled={stage !== 1}>Opt In</Button>
-					</CardActions>
-				</StageCard>
-
-
-
-				<StageCard currStage={stage} triggerStage={2} title="Fund DAO Contract">
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 2}>Fund Contract</Button>
-					</CardActions>
-				</StageCard>
-
-				<StageCard currStage={stage} triggerStage={3} title="Initialize DAO">
-					<CardContent>
-						<Stepper activeStep={-1} orientation="vertical">
-							<Step><StepLabel>Initialize DAO w/ Deployer</StepLabel></Step>
-							<Step><StepLabel>Opting in DAO Token</StepLabel></Step>
-						</Stepper>
-					</CardContent>
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Initialize Contract</Button>
-					</CardActions>
-				</StageCard>
-
-				<StageCard currStage={stage} triggerStage={4} title="Propose Functionality">
-					<CardContent>
-						<Stepper activeStep={-1} orientation="vertical">
-							<Step><StepLabel>Deploy Functionalityr</StepLabel></Step>
-							<Step><StepLabel>Propose Functionality</StepLabel></Step>
-						</Stepper>
-					</CardContent>
-				</StageCard>
-
-				<StageCard currStage={stage} triggerStage={4} title="Vote">
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Vote</Button>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Reclaim</Button>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>End Voting</Button>
-					</CardActions>
-				</StageCard>
-
-				<StageCard currStage={stage} triggerStage={4} title="Vote Ended">
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Active</Button>
-					</CardActions>
-				</StageCard>
-				<StageCard currStage={stage} triggerStage={4} title="Invoke Functionality">
-					<CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Invoke</Button>
-					</CardActions>
-				</StageCard>
-				<StageCard currStage={stage} triggerStage={4} title="DAO Opted-In ASAs">
-					{/* <CardActions>
-						<Button variant="contained" onClick={() => setStage(3)} disabled={stage !== 3}>Invoke</Button>
-					</CardActions> */}
-				</StageCard>
+				<DeployApp app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				<DAOToken app={app} setApp={setApp} algod={algod} wallets={wallets} />
+				<InitDAO app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				<FakeASA app={app} setApp={setApp} algod={algod} wallets={wallets} />
+				<ProposeFunctionality app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				<Voting app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
 			</section>
 		</main>
 	);

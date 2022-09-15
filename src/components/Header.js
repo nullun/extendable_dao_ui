@@ -3,6 +3,7 @@ import { Button, Box, Chip, Divider, Dialog, DialogTitle, DialogContent, List, L
 import { TuneTwoTone, WalletRounded } from '@mui/icons-material';
 import {useSandboxData, useSandboxActive} from '../hooks/useSandbox';
 import useWallets from '../hooks/useWallets'
+import { secretKeyToMnemonic } from 'algosdk';
 
 export default function Header(){
 	const [openSandbox, setOpenSandbox] = useState(false)
@@ -57,8 +58,8 @@ export default function Header(){
 				<DialogContent sx={{wordWrap: 'break-word'}}>
 					<List>
 					{typeof wallets !== 'undefined' && wallets.length > 0 && wallets.map(wallet => 
-						<ListItem key={wallet.address}>	
-							<ListItemText primary={wallet.address} secondary={wallet.private_key} multiline />
+						<ListItem key={wallet.addr}>	
+							<ListItemText primary={wallet.addr} secondary={secretKeyToMnemonic(wallet.sk)} />
 						</ListItem>
 					)}
 					</List>

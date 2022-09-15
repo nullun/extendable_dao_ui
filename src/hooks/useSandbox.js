@@ -29,6 +29,9 @@ export function useSandboxActive(enabled = true){
 			algod: false,
 			indexer: false,
 			kmd: false
-		}
+		},
+		retry: true,
+		staleTime: 5000,
+		cacheTime: 5000
 	})
 }

@@ -1,32 +1,33 @@
 import { useQuery } from '@tanstack/react-query'
 import {useSandboxData} from './useSandbox';
-import algosdk from 'algosdk';
+import {Kmd, encodeAddress} from 'algosdk';
 
 export default function useWallets(enabled = false){
 
     const [sandbox] = useSandboxData()
 
     return useQuery(['wallets', sandbox], async () => {
-		const key = new algosdk.Kmd(sandbox.kmd_token, "http://localhost", sandbox.kmd_port)
-		let walletToken;
-		const wallets = await key.listWallets()
-		.then(res => key.initWalletHandle(res.wallets[0].id))
+		const kmd = new Kmd(sandbox.kmd_token, "http://localhost", sandbox.kmd_port)
+		let walletHandle;
+		const wallets = await kmd.listWallets()
+		.then(res => kmd.initWalletHandle(res.wallets[0].id))
 		.then(res => {
-			walletToken = res.wallet_handle_token
-			return key.listKeys(walletToken)
+			walletHandle = res.wallet_handle_token
+			return kmd.listKeys(walletHandle)
 		}).then(async res => {
-			const privateKeys = await Promise.all(res.addresses.map(async address => algosdk.secretKeyToMnemonic((await key.exportKey(walletToken, "", address)).private_key)))
-			return res.addresses.map((address, i) => ({
-				address: address,
-				private_key: privateKeys[i]
-			}))
+
+			const privateKeys =  await Promise.all(res.addresses.map(async address => await kmd.exportKey(walletHandle, "", address)))
+
+			kmd.releaseWalletHandle(walletHandle)
+
+			return privateKeys.map(key => ({sk: key.private_key, addr: encodeAddress(key.private_key.slice(32))}))
+			
 		}).catch(e => [])
 
 		if(wallets.length === 0) throw new Error('No Wallets Found')
 		return wallets
 	},{
 		enabled: enabled,
-		staleTime: Infinity,
-		cacheTime: Infinity
+		retry: true,
 	})
 }
