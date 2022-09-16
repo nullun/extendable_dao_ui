@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { CardActions, CardContent, Step, Stepper, StepLabel } from "@mui/material";
+import { CardActions, CardContent, Step, Stepper, StepLabel, Box, Divider, Chip } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { makeAssetCreateTxnWithSuggestedParamsFromObject, waitForConfirmation } from "algosdk";
@@ -54,6 +54,11 @@ export default function FakeASA({app, setApp, algod, wallets}){
 	return(
 		<StageCard currStage={app.stage} triggerStage={3} title="Create Fake ASAs" error={isError}>
 			<CardContent>
+				<Box display="flex" justifyContent="space-between" mb={2}>
+					<Chip label={('FUSDC ID: ' + ('asa1' in app.data ? app.data.asa1 : ''))} />
+					<Divider orientation="vertical" flexItem />
+					<Chip label={('FUSDT ID: ' + ('asa2' in app.data ? app.data.asa2 : ''))} />
+				</Box>
 				<Stepper activeStep={step} orientation="vertical">
 					<Step><StepLabel>Create Fake USDC (FUSDC)</StepLabel></Step>
 					<Step><StepLabel>Create Fake USDT (FUSDT)</StepLabel></Step>

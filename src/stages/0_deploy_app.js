@@ -52,9 +52,10 @@ export default function DeployApp({app, setApp, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={0} title="Deploy DAO" error={isError}>
+		<StageCard currStage={app.stage} triggerStage={0} title="Deploy DAO" error={isError} sx={{width: '284px'}}>
 			<CardContent>
-				<Typography mb={2}>App ID: {'appID' in app.data ? app.data.appID : 'Not Deployed'}</Typography>
+				<Typography mb={1}>App ID: {'appID' in app.data ? app.data.appID : 'Not Deployed'}</Typography>
+				<Typography noWrap mb={2}>App Address: {'appAddress' in app.data ? app.data.appAddress : 'Not Deployed'}</Typography>
 				<TextField inputProps={{maxLength: 15}} label="Name of DAO" disabled={app.stage !== 0} value={name} onChange={(e) => setName(e.target.value)} />
 			</CardContent>
 			<CardActions>

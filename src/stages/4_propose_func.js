@@ -63,9 +63,9 @@ export default function ProposeFunctionality({app, setApp, algod, contract, wall
 		<StageCard currStage={app.stage} triggerStage={4} title="Propose Functionality" error={isError}>
 			<CardContent>
 				<Stepper activeStep={step} orientation="vertical">
-					<Step><StepLabel>Compile Opt-In Contracts</StepLabel></Step>
+					<Step><StepLabel>Compile Functionality Contracts</StepLabel></Step>
 					<Step><StepLabel>Create Contract Deploy Txn</StepLabel></Step>
-					<Step><StepLabel>Propose Opt-In Functionality</StepLabel></Step>
+					<Step><StepLabel>Propose Functionality Contracts</StepLabel></Step>
 				</Stepper>
 				<Typography mt={1}>Proposal App ID: {'proposalApp' in app.data ? app.data.proposalApp : 'Not Deployed'}</Typography>
 			</CardContent>

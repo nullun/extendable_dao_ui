@@ -15,6 +15,7 @@ import {
 export default function DAOToken({app, setApp, algod, wallets}){
 
 	const [step, setStep] = useState(-1)
+	const [tokenCount] = useState(20)
 
 	const { isFetching, isError, refetch } = useQuery(['1', 'dao_token'], async () => {
 
@@ -55,7 +56,7 @@ export default function DAOToken({app, setApp, algod, wallets}){
 				txn: makeAssetTransferTxnWithSuggestedParamsFromObject({
 					from: app.data.owner,
 					to: app.data.voter,
-					amount: 20,
+					amount: tokenCount,
 					assetIndex: assetID,
 					suggestedParams: sp
 				}),
@@ -84,7 +85,8 @@ export default function DAOToken({app, setApp, algod, wallets}){
 				stage: 2,
 				data: {
 					...prev.data,
-					daotokenID: assetID
+					daotokenID: assetID,
+					voterTokens: tokenCount
 				}
 			}))
 		}
@@ -96,7 +98,7 @@ export default function DAOToken({app, setApp, algod, wallets}){
 				<Stepper activeStep={step} orientation="vertical">
 					<Step><StepLabel>Create DAO Token</StepLabel></Step>
 					<Step><StepLabel>Opt-In Voter Address to Token</StepLabel></Step>
-					<Step><StepLabel>Send Voter Address 20 Tokens</StepLabel></Step>
+					<Step><StepLabel>Send Voter Address {tokenCount} Tokens</StepLabel></Step>
 					<Step><StepLabel>Fund DAO Contract w/ 10 Algos</StepLabel></Step>
 				</Stepper>
 			</CardContent>

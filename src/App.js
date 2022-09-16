@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Typography, Box, CircularProgress } from "@mui/material";
+import { Typography, Box, CircularProgress, Link, Button } from "@mui/material";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Header from "./components/Header";
 import { useSandboxData, useSandboxActive } from "./hooks/useSandbox";
 import useWallets from "./hooks/useWallets";
@@ -39,11 +40,12 @@ export default function App() {
 			<Header data={sandbox_conn} sandbox={sandbox} setSandbox={setSandbox} />
 			<Typography variant="h3" fontWeight={700} textAlign="center" mb={2}>Extendable DAO Demo</Typography>
 			
-			{(!sandbox_conn.algod || !sandbox_conn.kmd || typeof wallets === 'undefined' ) ? 
+			{(!sandbox_conn.algod || !sandbox_conn.kmd || typeof wallets === 'undefined') ? 
 			<CircularProgress color="primary" size="5rem" sx={{margin: '0 auto'}} /> : 
 			<Box display="flex" flexDirection="column" gap={2} position="relative" alignItems="center">
-				<Box display="flex" pt={1}>
+				<Box display="flex" flexDirection="column" gap={2} pt={1}>
 					<DeployApp app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+					{'appAddress' in app.data && <Link href={`https://explorer.dappflow.org/explorer/account/${app.data.appAddress}/assets`} target="_blank" rel="noopener noreferrer"><Button variant="contained">View App Assets in DAppFlow <OpenInNewIcon /></Button></Link>}
 				</Box>
 				<Box display="flex" gap={2}>
 					<DAOToken app={app} setApp={setApp} algod={algod} wallets={wallets} />
@@ -55,8 +57,10 @@ export default function App() {
 				</Box>
 				<Box display="flex" gap={2} pb={1}>
 					<Voting app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-					<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-					<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
+					<Box display="flex" flexDirection="column" gap={2}>
+						<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+						<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
+					</Box>
 				</Box>
 			</Box>}
 		</main>
