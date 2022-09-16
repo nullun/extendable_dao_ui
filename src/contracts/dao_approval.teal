@@ -12,7 +12,7 @@ method "activate(application)uint64"
 ==
 bnz main_l16
 txna ApplicationArgs 0
-method "destroy()bool"
+method "deactivate()bool"
 ==
 bnz main_l15
 txna ApplicationArgs 0
@@ -197,7 +197,7 @@ int 0
 !=
 &&
 assert
-callsub destroy_3
+callsub deactivate_3
 store 24
 byte 0x151f7c75
 byte 0x00
@@ -423,8 +423,8 @@ app_global_del
 itxn CreatedApplicationID
 retsub
 
-// destroy
-destroy_3:
+// deactivate
+deactivate_3:
 int 1
 retsub
 

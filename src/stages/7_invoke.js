@@ -23,8 +23,9 @@ export default function Invoke({app, algod, contract, wallets}){
 					sender: app.data.owner,
 					signer: owner,
 					suggestedParams: sp
-					// foreign Assets
 				});
+				// foreign Assets
+				composer['transactions'][0]['txn']['appForeignAssets'][0] = app.data.asa1;
 			} else {
 				composer.addTransaction({
 					txn: makeAssetTransferTxnWithSuggestedParamsFromObject({
