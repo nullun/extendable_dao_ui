@@ -12,9 +12,7 @@ export const useSandboxData = () => useLocalStorage("sandbox", {
 })
 
 
-export function useSandboxActive(enabled = true){
-
-	const [sandbox] = useSandboxData()
+export function useSandboxActive(sandbox){
 
     return useQuery(['sandbox_conn', sandbox], async () => {
 		const algod = await fetch('http://localhost:' + sandbox.algod_port + '/v2/status', { headers: { 'X-Algo-Api-Token': sandbox.algod_token }}).then(res => res.ok).catch(e => false)
@@ -23,7 +21,7 @@ export function useSandboxActive(enabled = true){
 
 		return {algod: algod, indexer: indexer, kmd: kmd}
 	}, {
-		enabled: enabled,
+		enabled: true,
 		refetchInterval: 5000, // Poll Sandbox Every 5 seconds
 		initialData: {
 			algod: false,

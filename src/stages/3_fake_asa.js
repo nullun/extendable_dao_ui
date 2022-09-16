@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { CardActions, CardContent, Step, Stepper, StepLabel, StepContent } from "@mui/material";
+import { CardActions, CardContent, Step, Stepper, StepLabel } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { makeAssetCreateTxnWithSuggestedParamsFromObject, waitForConfirmation } from "algosdk";
@@ -36,7 +36,7 @@ export default function FakeASA({app, setApp, algod, wallets}){
 			}).signTxn(wallets[0].sk)).do())
 			const fakeusdtID = (await waitForConfirmation(algod, fakeusdtTxn.txId, 4))["asset-index"];
 
-
+			setStep(2)
 			return {asa1: fakeusdcID, asa2: fakeusdtID}
 	}, {
 		onSuccess: ({asa1, asa2}) => {
@@ -55,14 +55,8 @@ export default function FakeASA({app, setApp, algod, wallets}){
 		<StageCard currStage={app.stage} triggerStage={3} title="Create Fake ASAs" error={isError}>
 			<CardContent>
 				<Stepper activeStep={step} orientation="vertical">
-					<Step>
-						<StepLabel>Create Fake USDC (FUSDC)</StepLabel>
-						<StepContent>{'asa1' in app.data && ('Fake USDC ID: ' + app.data.asa1)}</StepContent>
-					</Step>
-					<Step>
-						<StepLabel>Create Fake USDT (FUSDT)</StepLabel>
-						<StepContent>{'asa2' in app.data && ('Fake USDT ID: ' + app.data.asa2)}</StepContent>
-					</Step>
+					<Step><StepLabel>Create Fake USDC (FUSDC)</StepLabel></Step>
+					<Step><StepLabel>Create Fake USDT (FUSDT)</StepLabel></Step>
 				</Stepper>
 			</CardContent>
 			<CardActions>

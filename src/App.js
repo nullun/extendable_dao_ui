@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, CircularProgress } from "@mui/material";
 import Header from "./components/Header";
-import { useSandboxData } from "./hooks/useSandbox";
+import { useSandboxData, useSandboxActive } from "./hooks/useSandbox";
 import useWallets from "./hooks/useWallets";
 
 import { Algodv2, ABIContract } from "algosdk";
@@ -20,12 +20,13 @@ const contract = new ABIContract(dao_abi)
 
 export default function App() {
 	const [app, setApp] = useState({
-		stage: 1,
+		stage: 0,
 		data: {}
 	})
 
-	// const { data: sandbox_conn } = useSandboxActive()
-	const [sandbox] = useSandboxData()
+
+	const [sandbox, setSandbox] = useSandboxData()
+	const { data: sandbox_conn } = useSandboxActive(sandbox)
 
 	const {data: wallets} = useWallets()
 
@@ -35,25 +36,29 @@ export default function App() {
 
 	return (
 		<main id="App">
-			<Header />
+			<Header data={sandbox_conn} sandbox={sandbox} setSandbox={setSandbox} />
 			<Typography variant="h3" fontWeight={700} textAlign="center" mb={2}>Extendable DAO Demo</Typography>
-
-			<Box display="flex" justifyContent="center">
-				<DeployApp app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-			</Box>
-			<Box display="flex" gap={2} justifyContent="center">
-				<DAOToken app={app} setApp={setApp} algod={algod} wallets={wallets} />
-				<Box display="flex" flexDirection="column" gap={2}>
-					<InitDAO app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-					<FakeASA app={app} setApp={setApp} algod={algod} wallets={wallets} />
+			
+			{(!sandbox_conn.algod || !sandbox_conn.kmd || typeof wallets === 'undefined' ) ? 
+			<CircularProgress color="primary" size="5rem" sx={{margin: '0 auto'}} /> : 
+			<Box display="flex" flexDirection="column" gap={2} position="relative" alignItems="center">
+				<Box display="flex" pt={1}>
+					<DeployApp app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
 				</Box>
-				<ProposeFunctionality app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-			</Box>
-			<Box display="flex" justifyContent="center" gap={2}>
-				<Voting app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-				<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-				<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
-			</Box>
+				<Box display="flex" gap={2}>
+					<DAOToken app={app} setApp={setApp} algod={algod} wallets={wallets} />
+					<Box display="flex" flexDirection="column" gap={2}>
+						<InitDAO app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+						<FakeASA app={app} setApp={setApp} algod={algod} wallets={wallets} />
+					</Box>
+					<ProposeFunctionality app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+				</Box>
+				<Box display="flex" gap={2} pb={1}>
+					<Voting app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+					<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+					<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
+				</Box>
+			</Box>}
 		</main>
 	);
 }

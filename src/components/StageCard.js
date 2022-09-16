@@ -1,5 +1,6 @@
 import { Card, Typography, Alert, Divider, Avatar, Box } from "@mui/material"
 import CheckIcon from '@mui/icons-material/Check'
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 export default function StageCard({currStage, triggerStage, title, children, error, sx}){
     const current = currStage === triggerStage;
@@ -11,7 +12,7 @@ export default function StageCard({currStage, triggerStage, title, children, err
             <Chip sx={{marginLeft: 1}} size="small" icon={isComplete && <CheckIcon />} label={!isComplete && triggerStage} color={isComplete ? 'success' : 'primary'} /> */}
 
             <Box display="flex" alignItems="center" gap={1} mb={1}>
-                <Avatar variant="rounded" sx={{width: '2rem', height: '2rem', bgcolor: isComplete ? "#2e7d32" : "#1976d2"}}>{isComplete ? <CheckIcon /> : triggerStage}</Avatar>
+                <Avatar variant="rounded" sx={{width: '2rem', height: '2rem', bgcolor: isComplete ? "#2e7d32" : error ? "#d32f2f" : "#1976d2"}}>{isComplete ? <CheckIcon /> : error ? <PriorityHighIcon /> : triggerStage}</Avatar>
                 <Typography variant="h5">{title}</Typography>
             </Box>
             <Divider />

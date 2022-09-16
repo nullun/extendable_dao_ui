@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import { Button, Box, Chip, Divider, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, TextField, Typography, Stack } from '@mui/material';
 import { TuneTwoTone, WalletRounded } from '@mui/icons-material';
-import {useSandboxData, useSandboxActive} from '../hooks/useSandbox';
 import useWallets from '../hooks/useWallets'
 import { secretKeyToMnemonic } from 'algosdk';
 
-export default function Header(){
+export default function Header({data, sandbox, setSandbox}){
 	const [openSandbox, setOpenSandbox] = useState(false)
 	const [openWallets, setOpenWallets] = useState(false)
-
-	const [sandbox, setSandbox] = useSandboxData()
-	const { data } = useSandboxActive(!openSandbox)
 
 	const { data: wallets } = useWallets(data.kmd)
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StageCard from "../components/StageCard";
 import { Step, Stepper, StepLabel, CardContent, StepContent } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
@@ -7,7 +7,8 @@ import { AtomicTransactionComposer, makeBasicAccountTransactionSigner, OnApplica
 
 export default function Proposal({app, setApp, algod, contract, wallets}){
 
-	const [step, setStep] = useState(app.stage === 6 ? 0 : -1)
+	const [step, setStep] = useState(-1)
+	useEffect(() => { if(app.stage === 6 && step === -1) setStep(0) }, [app, step])
 
 	const { isFetching, isError, refetch } = useQuery(['6', 'proposal'], async () => {
 			let sp = await algod.getTransactionParams().do()
