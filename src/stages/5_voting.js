@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, CardActions, CardContent, TextField, Typography, Box } from "@mui/material";
+import { CardActions, CardContent, TextField, Typography, Box } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -65,7 +65,7 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={5} title="Voting">
+		<StageCard currStage={app.stage} triggerStage={5} title="Voting" error={(vote_error || end_error)}>
 			<CardContent>
 				<Typography>Voting for Proposal App: {'proposalApp' in app.data && app.data.proposalApp}</Typography>
 
@@ -78,7 +78,6 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 				<LoadingButton variant="contained" onClick={() => refetch()} loading={vote_fetching} disabled={app.stage !== 5 || isSuccess}>Vote</LoadingButton>
 				<LoadingButton variant="contained" onClick={() => end_vote()} loading={vote_ending} disabled={app.stage !== 5 || !isSuccess || vote_fetching}>End Vote</LoadingButton>
 			</CardActions>
-			{(vote_error || end_error) && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

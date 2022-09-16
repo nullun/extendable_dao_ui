@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, CardActions } from "@mui/material";
+import { CardActions } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { AtomicTransactionComposer, makeBasicAccountTransactionSigner, makeAssetTransferTxnWithSuggestedParamsFromObject } from "algosdk";
@@ -45,14 +45,13 @@ export default function Invoke({app, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={7} title="Invoke">
+		<StageCard currStage={app.stage} triggerStage={7} title="Invoke" error={isError}>
 			<CardActions>
 				<Box display="flex" flexDirection="column" gap={2} mt={2}>
 					<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 7 || invoked}>Invoke</LoadingButton>		
 					<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 7 || !invoked}>Send 10 FUSDC to DAO</LoadingButton>
 				</Box>
 			</CardActions>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

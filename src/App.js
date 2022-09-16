@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import Header from "./components/Header";
 import { useSandboxData } from "./hooks/useSandbox";
 import useWallets from "./hooks/useWallets";
@@ -20,7 +20,7 @@ const contract = new ABIContract(dao_abi)
 
 export default function App() {
 	const [app, setApp] = useState({
-		stage: 0,
+		stage: 1,
 		data: {}
 	})
 
@@ -36,18 +36,24 @@ export default function App() {
 	return (
 		<main id="App">
 			<Header />
-			<Typography variant="h3" textAlign="center" mb={2}>Extendable DAO Demo</Typography>
+			<Typography variant="h3" fontWeight={700} textAlign="center" mb={2}>Extendable DAO Demo</Typography>
 
-			<section style={{display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
+			<Box display="flex" justifyContent="center">
 				<DeployApp app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+			</Box>
+			<Box display="flex" gap={2} justifyContent="center">
 				<DAOToken app={app} setApp={setApp} algod={algod} wallets={wallets} />
-				<InitDAO app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
-				<FakeASA app={app} setApp={setApp} algod={algod} wallets={wallets} />
+				<Box display="flex" flexDirection="column" gap={2}>
+					<InitDAO app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+					<FakeASA app={app} setApp={setApp} algod={algod} wallets={wallets} />
+				</Box>
 				<ProposeFunctionality app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
+			</Box>
+			<Box display="flex" justifyContent="center" gap={2}>
 				<Voting app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
 				<Proposal app={app} setApp={setApp} algod={algod} contract={contract} wallets={wallets} />
 				<Invoke app={app} algod={algod} contract={contract} wallets={wallets} />
-			</section>
+			</Box>
 		</main>
 	);
 }

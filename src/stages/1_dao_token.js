@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, CardActions, CardContent, Step, Stepper, StepLabel } from "@mui/material";
+import { CardActions, CardContent, Step, Stepper, StepLabel } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -91,7 +91,7 @@ export default function DAOToken({app, setApp, algod, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={1} title="Create DAO Token">
+		<StageCard currStage={app.stage} triggerStage={1} title="Create DAO Token" error={isError}>
 			<CardContent>
 				<Stepper activeStep={step} orientation="vertical">
 					<Step><StepLabel>Create DAO Token</StepLabel></Step>
@@ -103,7 +103,6 @@ export default function DAOToken({app, setApp, algod, wallets}){
 			<CardActions>
 				<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 1}>Create DAO Token</LoadingButton>
 			</CardActions>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

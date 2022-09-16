@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, CardActions, CardContent, Typography, TextField } from "@mui/material";
+import { CardActions, CardContent, Typography, TextField } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { AtomicTransactionComposer, makeBasicAccountTransactionSigner, getApplicationAddress } from "algosdk";
@@ -52,7 +52,7 @@ export default function DeployApp({app, setApp, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={0} title="Deploy DAO">
+		<StageCard currStage={app.stage} triggerStage={0} title="Deploy DAO" error={isError}>
 			<CardContent>
 				<Typography mb={2}>App ID: {'appID' in app.data ? app.data.appID : 'Not Deployed'}</Typography>
 				<TextField inputProps={{maxLength: 15}} label="Name of DAO" disabled={app.stage !== 0} value={name} onChange={(e) => setName(e.target.value)} />
@@ -60,7 +60,6 @@ export default function DeployApp({app, setApp, algod, contract, wallets}){
 			<CardActions>
 				<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 0 || name === ''}>Deploy DAO</LoadingButton>
 			</CardActions>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

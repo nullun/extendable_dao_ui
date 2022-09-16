@@ -28,6 +28,6 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-    <Alert severity="error" style={{fontWeight: '600', position: 'absolute', bottom: '0', width: '100%'}}>THIS APP IS FOR DEMO PURPOSES ONLY. DO NOT USE IN PRODUCTION.</Alert>
+    <Alert id='footer' severity="error" style={{fontWeight: '600', marginTop: '4rem'}}>THIS APP IS FOR DEMO PURPOSES ONLY. DO NOT USE IN PRODUCTION.</Alert>
   </React.StrictMode>
 );

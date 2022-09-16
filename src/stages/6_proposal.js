@@ -1,13 +1,13 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, Step, Stepper, StepLabel, CardContent, StepContent } from "@mui/material";
+import { Step, Stepper, StepLabel, CardContent, StepContent } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { AtomicTransactionComposer, makeBasicAccountTransactionSigner, OnApplicationComplete } from "algosdk";
 
 export default function Proposal({app, setApp, algod, contract, wallets}){
 
-	const [step, setStep] = useState(0)
+	const [step, setStep] = useState(app.stage === 6 ? 0 : -1)
 
 	const { isFetching, isError, refetch } = useQuery(['6', 'proposal'], async () => {
 			let sp = await algod.getTransactionParams().do()
@@ -76,7 +76,7 @@ export default function Proposal({app, setApp, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={6} title="Proposal">
+		<StageCard currStage={app.stage} triggerStage={6} title="Proposal" error={isError}>
 			<CardContent>
 				<Stepper activeStep={step} orientation="vertical">
 					<Step>
@@ -99,7 +99,6 @@ export default function Proposal({app, setApp, algod, contract, wallets}){
 					</Step>
 				</Stepper>
 			</CardContent>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

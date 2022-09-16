@@ -1,5 +1,5 @@
 import StageCard from "../components/StageCard";
-import { Alert, CardActions, CardContent, Typography } from "@mui/material";
+import { CardActions, CardContent, Typography } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { AtomicTransactionComposer, makeBasicAccountTransactionSigner } from "algosdk";
@@ -26,14 +26,13 @@ export default function InitDAO({app, setApp, algod, contract, wallets}){
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={2} title="Initialise DAO">
+		<StageCard currStage={app.stage} triggerStage={2} title="Initialise DAO" error={isError}>
 			<CardContent>
 				<Typography>Initialise DAO with DAO Token</Typography>
 			</CardContent>
 			<CardActions>
 				<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 2}>Initialise DAO</LoadingButton>
 			</CardActions>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }

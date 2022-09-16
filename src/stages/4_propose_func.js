@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { Alert, CardActions, CardContent, Typography, Step, Stepper, StepLabel } from "@mui/material";
+import { CardActions, CardContent, Typography, Step, Stepper, StepLabel } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { AtomicTransactionComposer, makeBasicAccountTransactionSigner, makeApplicationCreateTxnFromObject } from "algosdk";
@@ -60,9 +60,8 @@ export default function ProposeFunctionality({app, setApp, algod, contract, wall
 	})
 
 	return(
-		<StageCard currStage={app.stage} triggerStage={4} title="Propose Functionality">
+		<StageCard currStage={app.stage} triggerStage={4} title="Propose Functionality" error={isError}>
 			<CardContent>
-				<Typography>Propose Opt-In Functionality to be voted by the DAO</Typography>
 				<Stepper activeStep={step} orientation="vertical">
 					<Step><StepLabel>Compile Opt-In Contracts</StepLabel></Step>
 					<Step><StepLabel>Create Contract Deploy Txn</StepLabel></Step>
@@ -73,7 +72,6 @@ export default function ProposeFunctionality({app, setApp, algod, contract, wall
 			<CardActions>
 				<LoadingButton variant="contained" onClick={() => refetch()} loading={isFetching} disabled={app.stage !== 4}>Propose Functionality</LoadingButton>
 			</CardActions>
-			{isError && <Alert severity="error">An Error Occurred.</Alert>}
 		</StageCard>
 	)
 }
