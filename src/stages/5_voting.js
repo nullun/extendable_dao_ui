@@ -1,6 +1,6 @@
 import { useState } from "react";
 import StageCard from "../components/StageCard";
-import { CardActions, CardContent, TextField, Typography, Box, Chip } from "@mui/material";
+import { CardActions, CardContent, TextField, Typography, Box, Chip, Switch } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -9,6 +9,7 @@ import {
 	makeBasicAccountTransactionSigner, 
 	OnApplicationComplete
 } from "algosdk";
+import { Stack } from "@mui/system";
 
 export default function Voting({app, setApp, algod, contract, wallets}){
 	const [amount, setAmount] = useState(1)
@@ -34,7 +35,6 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 			if('yesVotes' in app.data){
 				composer.addTransaction(assetTransfer)
 			} else {
-				// Voting Txn
 				composer.addMethodCall({
 					appID: app.data.appID,
 					method: contract.getMethodByName("vote"),
@@ -58,7 +58,6 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 					signer: signer
 				})
 			}
-
 			await composer.execute(algod, 2)
 
 			return amount
@@ -112,17 +111,15 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 				</Box>
 			</CardContent>
 			<CardActions sx={{flexDirection: 'column'}}>
-				<Box display="flex" gap={2} mb={2}>
-					<LoadingButton variant="contained" onClick={() => { 
-						setVote(true)
-						refetch()
-					}} loading={vote_fetching} color="success" disabled={app.stage !== 5 || vote_ending || votesRemaining === 0}>Vote YES</LoadingButton>
-					<LoadingButton variant="contained" onClick={() => {
-						setVote(false)
-						refetch()
-					}} loading={vote_fetching} color="error" disabled={app.stage !== 5 || vote_ending || votesRemaining === 0}>Vote NO</LoadingButton>
+				<Stack direction="row" spacing={0} alignItems="center">
+					<Typography>NO</Typography>
+					<Switch checked={vote} onChange={() => setVote(!vote)} color="success" />
+					<Typography>YES</Typography>
+				</Stack>
+				<Box display="flex" gap={2}>
+					<LoadingButton sx={{width: '105px'}} variant="contained" onClick={() => refetch()} loading={vote_fetching} color={vote ? "success" : "error"} disabled={app.stage !== 5 || vote_ending || votesRemaining === 0}>Vote {vote ? 'YES' : 'NO'}</LoadingButton>
+					<LoadingButton variant="contained" onClick={() => end_vote()} loading={vote_ending} disabled={app.stage !== 5 || !isSuccess || vote_fetching}>End Vote</LoadingButton>
 				</Box>
-				<LoadingButton variant="contained" onClick={() => end_vote()} loading={vote_ending} disabled={app.stage !== 5 || !isSuccess || vote_fetching}>End Vote</LoadingButton>
 			</CardActions>
 		</StageCard>
 	)
