@@ -31,33 +31,29 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 				signer: signer
 			}
 
-
-			if('yesVotes' in app.data){
-				composer.addTransaction(assetTransfer)
-			} else {
-				composer.addMethodCall({
-					appID: app.data.appID,
-					method: contract.getMethodByName("vote"),
-					methodArgs: [
-						app.data.proposalApp,
-						{
-							txn: makeAssetTransferTxnWithSuggestedParamsFromObject({
-								from: app.data.voter,
-								to: app.data.appAddress,
-								amount: amount,
-								assetIndex: app.data.daotokenID,
-								suggestedParams: sp
-							}),
-							signer: signer
-						},
-						vote,
-					],
-					onComplete: OnApplicationComplete.OptInOC,
-					suggestedParams: sp,
-					sender: app.data.voter,
-					signer: signer
-				})
-			}
+			composer.addMethodCall({
+				appID: app.data.appID,
+				method: contract.getMethodByName("vote"),
+				methodArgs: [
+					app.data.proposalApp,
+					{
+						txn: makeAssetTransferTxnWithSuggestedParamsFromObject({
+							from: app.data.voter,
+							to: app.data.appAddress,
+							amount: amount,
+							assetIndex: app.data.daotokenID,
+							suggestedParams: sp
+						}),
+						signer: signer
+					},
+					vote,
+				],
+				onComplete: 'yesVotes' in app.data ? OnApplicationComplete.NoOpOC : OnApplicationComplete.OptInOC,
+				suggestedParams: sp,
+				sender: app.data.voter,
+				signer: signer
+			})
+			
 			await composer.execute(algod, 2)
 
 			return amount
