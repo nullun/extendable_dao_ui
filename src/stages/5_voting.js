@@ -20,17 +20,6 @@ export default function Voting({app, setApp, algod, contract, wallets}){
 			const composer = new AtomicTransactionComposer()
 			const signer = makeBasicAccountTransactionSigner(wallets[1])
 
-			const assetTransfer = {
-				txn: makeAssetTransferTxnWithSuggestedParamsFromObject({
-					from: app.data.voter,
-					to: app.data.appAddress,
-					amount: amount,
-					assetIndex: app.data.daotokenID,
-					suggestedParams: sp
-				}),
-				signer: signer
-			}
-
 			composer.addMethodCall({
 				appID: app.data.appID,
 				method: contract.getMethodByName("vote"),
